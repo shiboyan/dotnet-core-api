@@ -35,15 +35,11 @@ steps:
     Contents: '**/DotNetCoreHelloWorld/*'
     TargetFolder: '$(Build.ArtifactStagingDirectory)/FunctionalTests'
     flattenFolders: true
-- task: CopyFiles@2
-  displayName: 'Copy ARM templates'
-  inputs:
-    SourceFolder: '$(Build.SourcesDirectory)'
-    TargetFolder: '$(build.artifactstagingdirectory)'    
+  
 - task: DotNetCoreCLI@2
   inputs:
     command: publish
-    publishWebProjects: false
+    publishWebProjects: true
     projects: '**/*.csproj'
     arguments: '--configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory)'
     zipAfterPublish: true
@@ -56,6 +52,11 @@ steps:
     arguments: '--configuration $(BuildConfiguration) --output $(build.artifactstagingdirectory)/FunctionalTests'
     zipAfterPublish: false
     modifyOutputPath: false
+- task: CopyFiles@2
+  displayName: 'Copy ARM templates'
+  inputs:
+    SourceFolder: '$(Build.SourcesDirectory)'
+    TargetFolder: '$(build.artifactstagingdirectory)'  
 # - script: mv $(Build.ArtifactStagingDirectory)/Implementation.zip  $(Build.ArtifactStagingDirectory)/Implementation
 # - script: mv $(Build.ArtifactStagingDirectory)/UnitTests.zip  $(Build.ArtifactStagingDirectory)/UnitTests      
 - task: PublishBuildArtifacts@1
